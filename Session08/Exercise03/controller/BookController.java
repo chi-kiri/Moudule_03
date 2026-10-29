@@ -1,0 +1,47 @@
+package com.example.book_management.controller;
+
+import com.example.book_management.dto.BookCreateDTO;
+import com.example.book_management.dto.BookUpdateStockDTO;
+import com.example.book_management.model.Book;
+import com.example.book_management.service.BookService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/books")
+public class BookController {
+
+    private final BookService bookService;
+
+    public BookController(BookService bookService) {
+        this.bookService = bookService;
+    }
+
+    @PostMapping
+    public ResponseEntity<Book> createBook(
+            @ModelAttribute BookCreateDTO dto) {
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(bookService.createBook(dto));
+    }
+
+    @PatchMapping("/update/{id}")
+    public ResponseEntity<Book> updateBook(
+            @PathVariable Long id,
+            @Valid @RequestBody BookUpdateStockDTO dto) {
+
+        return ResponseEntity.ok(
+                bookService.updateBook(id, dto)
+        );
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Book> getBookById(@PathVariable Long id) {
+        return ResponseEntity.ok(
+                bookService.getBookById(id)
+        );
+    }
+}
