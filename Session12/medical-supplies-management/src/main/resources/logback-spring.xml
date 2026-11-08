@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+
+    <!-- Console -->
+    <appender name="CONSOLE"
+              class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>
+                %d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <!-- Log chính của hệ thống -->
+    <appender name="FILE"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+        <file>logs/medical_supplies.log</file>
+
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>
+                %d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n
+            </pattern>
+        </encoder>
+
+        <rollingPolicy
+                class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+
+            <fileNamePattern>
+                logs/medical_supplies.%d{yyyy-MM-dd}.%i.log.gz
+            </fileNamePattern>
+
+            <maxFileSize>2MB</maxFileSize>
+            <maxHistory>7</maxHistory>
+
+        </rollingPolicy>
+
+    </appender>
+
+    <!-- File riêng cho lịch sử nhập kho -->
+    <appender name="HISTORY_FILE"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+        <file>logs/history.log</file>
+
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>
+                %d{yyyy-MM-dd HH:mm:ss} %-5level - %msg%n
+            </pattern>
+        </encoder>
+
+        <rollingPolicy
+                class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+
+            <fileNamePattern>
+                logs/history.%d{yyyy-MM-dd}.%i.log.gz
+            </fileNamePattern>
+
+            <maxFileSize>2MB</maxFileSize>
+            <maxHistory>7</maxHistory>
+
+        </rollingPolicy>
+
+    </appender>
+
+    <!-- Logger riêng cho history.log -->
+    <logger name="HISTORY_LOGGER"
+            level="INFO"
+            additivity="false">
+        <appender-ref ref="HISTORY_FILE"/>
+    </logger>
+
+    <!-- Cho phép DEBUG trong package của project -->
+    <logger name="com.example.medicalsuppliesmanagement"
+            level="DEBUG"/>
+
+    <!-- Root logger -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </root>
+
+</configuration>
