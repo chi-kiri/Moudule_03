@@ -1,0 +1,53 @@
+package com.example.milkteaauth.service;
+
+import com.example.milkteaauth.entity.Product;
+import com.example.milkteaauth.repository.ProductRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
+
+@Service
+public class ProductService {
+
+    private final ProductRepository productRepository;
+
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
+
+    public List<Product> getAll() {
+        return productRepository.findAll();
+    }
+
+    public Product create(Product product) {
+        product.setId(null);
+        return productRepository.save(product);
+    }
+
+    public Product update(Long id, Product request) {
+        Product product = findById(id);
+
+        product.setName(request.getName());
+        product.setDescription(request.getDescription());
+        product.setPrice(request.getPrice());
+        product.setSize(request.getSize());
+        product.setToppings(request.getToppings());
+
+        return productRepository.save(product);
+    }
+
+    public void delete(Long id) {
+        Product product = findById(id);
+        productRepository.delete(product);
+    }
+
+    private Product findById(Long id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Không tìm thấy sản phẩm"
+                ));
+    }
+}
